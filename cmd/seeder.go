@@ -22,6 +22,10 @@ func main() {
 		log.Fatalf("could not connect to db: %v", err)
 	}
 
+	// Drop the table and recreate it
+	db.Migrator().DropTable(&domain.User{})
+	db.AutoMigrate(&domain.User{})
+
 	seedUsers(db)
 }
 
@@ -32,12 +36,12 @@ func seedUsers(db *gorm.DB) {
 	}
 
 	users := []domain.User{
-		{Email: "user1@example.com", Password: string(hashedPassword)},
-		{Email: "user2@example.com", Password: string(hashedPassword)},
+		{Email: "admin@example.com", Password: string(hashedPassword), Role: "admin"},
+		{Email: "user@example.com", Password: string(hashedPassword), Role: "user"},
 	}
 
 	for _, user := range users {
-		db.FirstOrCreate(&user, domain.User{Email: user.Email})
+		db.Create(&user)
 	}
 
 	log.Println("Successfully seeded users")

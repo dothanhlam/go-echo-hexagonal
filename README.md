@@ -59,3 +59,5 @@ This is a boilerplate project for a Go application using the Echo web framework 
   ```bash
   curl http://localhost:8080/users/1
   ```
+
+This project has been created with Vibe Coding Gemini.

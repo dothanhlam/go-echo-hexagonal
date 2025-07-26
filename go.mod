@@ -5,6 +5,7 @@ go 1.23.0
 toolchain go1.23.11
 
 require (
+	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/labstack/echo/v4 v4.13.4
 	github.com/spf13/viper v1.20.1
 	golang.org/x/crypto v0.40.0

@@ -53,3 +53,23 @@ func (h *UserHdl) GetUser(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, user)
 }
+
+// ListUsers handles the retrieval of a paginated list of users.
+func (h *UserHdl) ListUsers(c echo.Context) error {
+	page, err := strconv.Atoi(c.QueryParam("page"))
+	if err != nil || page < 1 {
+		page = 1
+	}
+
+	limit, err := strconv.Atoi(c.QueryParam("limit"))
+	if err != nil || limit < 1 {
+		limit = 10
+	}
+
+	users, err := h.service.ListUsers(c.Request().Context(), page, limit)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, users)
+}

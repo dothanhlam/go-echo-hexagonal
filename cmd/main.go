@@ -6,6 +6,7 @@ import (
 	"go-echo-hexagonal/config"
 	"go-echo-hexagonal/internal/core/services"
 	"go-echo-hexagonal/internal/handlers"
+	"go-echo-hexagonal/internal/middlewares"
 	"go-echo-hexagonal/internal/repositories"
 
 	"github.com/labstack/echo/v4"
@@ -28,15 +29,23 @@ func main() {
 
 	// Set up the layers
 	userRepo := repositories.NewUserRepo(db)
-	userSrv := services.NewUserSrv(userRepo)
+	userSrv := services.NewUserSrv(userRepo, cfg.JWTSecret)
 	userHdl := handlers.NewUserHdl(userSrv)
+	authHdl := handlers.NewAuthHdl(userSrv)
 
 	// Set up Echo server
 	e := echo.New()
 
 	// Routes
+	e.POST("/login", authHdl.Login)
 	e.POST("/users", userHdl.CreateUser)
-	e.GET("/users/:id", userHdl.GetUser)
+
+	// Restricted routes
+	r := e.Group("")
+	r.Use(middlewares.Auth(cfg.JWTSecret, "admin"))
+	r.GET("/users", userHdl.ListUsers)
+	r.GET("/users/:id", userHdl.GetUser)
+
 
 	// Start server
 	if err := e.Start(cfg.ServerPort); err != nil {

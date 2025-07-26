@@ -12,6 +12,7 @@ type Config struct {
 	DBDriver   string `mapstructure:"DB_DRIVER"`
 	DBSource   string `mapstructure:"DB_SOURCE"`
 	ServerPort string `mapstructure:"SERVER_PORT"`
+	JWTSecret  string `mapstructure:"JWT_SECRET"`
 }
 
 // LoadConfig reads configuration from file or environment variables.
