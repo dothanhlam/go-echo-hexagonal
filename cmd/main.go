@@ -9,6 +9,7 @@ import (
 	"go-echo-hexagonal/internal/middlewares"
 	"go-echo-hexagonal/internal/repositories"
 
+	"github.com/go-redis/redis/v8"
 	"github.com/labstack/echo/v4"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -27,8 +28,13 @@ func main() {
 		log.Fatalf("could not connect to db: %v", err)
 	}
 
+	// Set up Redis client
+	rdb := redis.NewClient(&redis.Options{
+		Addr: cfg.RedisAddr,
+	})
+
 	// Set up the layers
-	userRepo := repositories.NewUserRepo(db)
+	userRepo := repositories.NewUserRepo(db, rdb)
 	userSrv := services.NewUserSrv(userRepo, cfg.JWTSecret)
 	userHdl := handlers.NewUserHdl(userSrv)
 	authHdl := handlers.NewAuthHdl(userSrv)

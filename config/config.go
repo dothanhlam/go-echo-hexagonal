@@ -9,10 +9,11 @@ import (
 // Config stores all configuration of the application.
 // The values are read by viper from a config file or environment variable.
 type Config struct {
-	DBDriver   string `mapstructure:"DB_DRIVER"`
-	DBSource   string `mapstructure:"DB_SOURCE"`
-	ServerPort string `mapstructure:"SERVER_PORT"`
-	JWTSecret  string `mapstructure:"JWT_SECRET"`
+	DBDriver    string `mapstructure:"DB_DRIVER"`
+	DBSource    string `mapstructure:"DB_SOURCE"`
+	ServerPort  string `mapstructure:"SERVER_PORT"`
+	JWTSecret   string `mapstructure:"JWT_SECRET"`
+	RedisAddr   string `mapstructure:"REDIS_ADDR"`
 }
 
 // LoadConfig reads configuration from file or environment variables.
